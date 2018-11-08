@@ -13,7 +13,7 @@
     body {
         background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/41294/hero.jpg) no-repeat center center fixed;
         background-size: cover;
-        height: 100%
+        /* height: 100% */
     }
     .search{
         width: 500px;
@@ -76,7 +76,8 @@
         background-color: white;
         border-radius: 5px;
         width: 70%;
-        margin: 150px auto;
+        margin: 50px auto;
+        display: none;
     }
 
     </style>
@@ -92,20 +93,6 @@
 
     <div class="results">
         <div>
-            <h2>Title</h2>
-            <div class="snippet">
-                Snippet text Environment: production
-                WARNING: Do not use the development server in a production environment.
-                Use a production WSGI server instead.
-            </div>
-        </div>
-        <div>
-            <h2>Title</h2>
-            <div class="snippet">
-                Snippet text Environment: production
-                WARNING: Do not use the development server in a production environment.
-                Use a production WSGI server instead.
-            </div>
         </div>
     </div>
     <script type="text/javascript">
@@ -123,8 +110,14 @@
                     dataType : "json",
                     contentType: 'application/json;charset=UTF-8',
                     success: function(json) {
-                        console.log(json["results"]);
-                        // there will parsing results json
+
+                        $(".results").css({'display':'block'});
+                        for (var i = 1; i <= json["results"].length; i++) {
+                            res_div = `<div id='${i}'></div>`;
+                            $(".results").append(res_div);
+                            // console.log(json['results'][i-1]);
+	                        $("#"+i).append(`<h2> ${json['results'][i-1]} </h2>`);
+                        }
                     },
                     error: function(xhr, errmsg, err) {
                         console.log(xhr.status + ": " + xhr.responseText);
