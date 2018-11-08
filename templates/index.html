@@ -71,6 +71,7 @@
     }
 
     .results {
+        padding: 5px;
         height: auto;
         top: 30%;
         background-color: white;
@@ -91,8 +92,8 @@
         </form>
     </div>
 
-    <div class="results">
-        <div>
+    <div id="wrapper">
+        <div class="results">
         </div>
     </div>
     <script type="text/javascript">
@@ -110,13 +111,15 @@
                     dataType : "json",
                     contentType: 'application/json;charset=UTF-8',
                     success: function(json) {
-
+                        $(".results").remove();
+                        $("#wrapper").append('<div class="results"></div>');
                         $(".results").css({'display':'block'});
+                        console.log(json["results"].length);
                         for (var i = 1; i <= json["results"].length; i++) {
                             res_div = `<div id='${i}'></div>`;
                             $(".results").append(res_div);
                             // console.log(json['results'][i-1]);
-	                        $("#"+i).append(`<h2> ${json['results'][i-1]} </h2>`);
+	                        $("#"+i).append(`<p> ${json['results'][i-1]} </p><hr>`);
                         }
                     },
                     error: function(xhr, errmsg, err) {
