@@ -5,78 +5,109 @@
     <title>Search</title>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <link rel="stylesheet" href="style.css"> -->
     <style media="screen">
-        html {
-            height: 100%;
-        }
-        body {
-            background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/41294/hero.jpg) no-repeat center center fixed;
-            background-size: cover;
-            height: 100%
-        }
-        .search {
-            width: 500px;
-            height: 40px;
-            margin: 150px auto;
-            background: #444;
-            background: rgba(0, 0, 0, .2);
-            border-radius: 3px;
-            border: 1px solid #fff;
-        }
+    html {
+        height: 100%;
+    }
+    body {
+        background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/41294/hero.jpg) no-repeat center center fixed;
+        background-size: cover;
+        height: 100%
+    }
+    .search{
+        width: 500px;
+        height: 40px;
+        margin: 150px auto;
+        background: #444;
+        background: rgba(0, 0, 0, .2);
+        border-radius: 3px;
+        border: 1px solid #fff;
+    }
 
-        .search input {
-            font-size: 120%;
-            width: 370px;
-            padding: 10px 5px;
-            height: 40px;
-            float: left;
-            color: #ccc;
-            border: 0;
-            background: transparent;
-            border-radius: 3px 0 0 3px;
-        }
+    .search input {
+        font-size: 120%;
+        width: 370px;
+        padding: 10px 5px;
+        height: 40px;
+        float: left;
+        color: #ccc;
+        border: 0;
+        background: transparent;
+        border-radius: 3px 0 0 3px;
+    }
 
-        .search input:focus {
-            outline: 0;
-            background: transparent;
-        }
+    .search input:focus {
+        outline: 0;
+        background: transparent;
+    }
 
-        .search button {
-            font-size: 100%;
-            position: relative;
-            float: right;
-            border: 0;
-            padding: 0;
-            cursor: pointer;
-            height: 40px;
-            width: 120px;
-            color: #fff;
-            background: transparent;
-            border-left: 1px solid #fff;
-            border-radius: 0 3px 3px 0;
-        }
+    .search button {
+        font-size: 100%;
+        position: relative;
+        float: right;
+        border: 0;
+        padding: 0;
+        cursor: pointer;
+        height: 40px;
+        width: 120px;
+        color: #fff;
+        background: transparent;
+        border-left: 1px solid #fff;
+        border-radius: 0 3px 3px 0;
+    }
 
-        .search button:hover {
-            background: #fff;
-            color: #444;
-        }
+    .search button:hover {
+        background: #fff;
+        color: #444;
+    }
 
-        .search button:active {
-            box-shadow: 0px 0px 12px 0px rgba(225, 225, 225, 1);
-        }
+    .search button:active {
+        box-shadow: 0px 0px 12px 0px rgba(225, 225, 225, 1);
+    }
 
-        .search button:focus {
-            outline: 0;
-        }
+    .search button:focus {
+        outline: 0;
+    }
+
+    .results {
+        height: auto;
+        top: 30%;
+        background-color: white;
+        border-radius: 5px;
+        width: 70%;
+        margin: 150px auto;
+    }
+
     </style>
 </head>
 
 <body>
+    <div class="">
+        <form class="search" action="">
+            <input type="search" placeholder="Search here..." required>
+            <button type="button" id="search-button">Search</button>
+        </form>
+    </div>
 
-    <form class="search" action="">
-        <input type="search" placeholder="Search here..." required>
-        <button type="button" id="search-button">Search</button>
-    </form>
+    <div class="results">
+        <div>
+            <h2>Title</h2>
+            <div class="snippet">
+                Snippet text Environment: production
+                WARNING: Do not use the development server in a production environment.
+                Use a production WSGI server instead.
+            </div>
+        </div>
+        <div>
+            <h2>Title</h2>
+            <div class="snippet">
+                Snippet text Environment: production
+                WARNING: Do not use the development server in a production environment.
+                Use a production WSGI server instead.
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#search-button').click(function() {
@@ -86,20 +117,19 @@
                     type: 'POST',
                     url: '/search',
                     data: JSON.stringify({
-                        "text": textValue,
+                        "query": textValue,
+                        "meta": "meta data",
                     }),
                     dataType : "json",
                     contentType: 'application/json;charset=UTF-8',
-                    // if sucess post request
                     success: function(json) {
-                        console.log('success');
+                        console.log(json["results"]);
+                        // there will parsing results json
                     },
-                    // if unsucess post request
                     error: function(xhr, errmsg, err) {
                         console.log(xhr.status + ": " + xhr.responseText);
                     }
                 });
-
             });
         });
     </script>
