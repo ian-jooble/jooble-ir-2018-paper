@@ -71,8 +71,10 @@ Function | Arguments | Description
 `search(tokens)` | **tokens** - stemmed tokens for search  | Make search (boolean AND - intersect of sets)<br>Return: returns set of doc_ids strs (like "23" or "12345")
 `get_docs(ids, is_str=False)` | **ids** - int ids of docs if **is_str=False**,<br>in other case: **ids** - strs of ids like 'doc:id' | Get docs by their ids<br>Returns: list of strs (documents textes)
 
+## Testing - 
 
-# TODO
+
+## TODO
 - [ ] Make doc class
 - [ ] Snippets api
 - [ ] Make other functions for index like delete(ids) etc.
