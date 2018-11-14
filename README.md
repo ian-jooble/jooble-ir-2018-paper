@@ -14,7 +14,7 @@ Services filenames ends with last 2 digits of port number to call it (search_68 
 ### search_68
 Search server provide **UI hosting** and **all search workflow**
 
-Receive: ajax post request from user interface with meta and search
+Receive: ajax post request from user interface with meta and search<br>
 Return: ranked docs
 Make call to:
 - Analyzer service (analyzer_71) with user search query and receive stemmed tokenized query and lang
@@ -24,7 +24,7 @@ Make call to:
 Analyzer provide **stemm, tokenize and lang detect** workflow
 > Later will be 3 separate services (maybe)
     
-Receive: list of lists of textes
+Receive: list of lists of textes<br>
 Return: list of lists of stemmed tokens for each document & list of languages codes
 
 Make call to:
@@ -34,7 +34,7 @@ Make call to:
 ### stemmer_66
 Provide stemming and tokenization
 
-Receive: text document and language
+Receive: text document and language<br>
 Return: list of stemmed tokens for document
 
 ### lang_detection_67
@@ -46,13 +46,13 @@ Returns: list of detected languages (strs code like de, en etc.)
 ### rank_70
 Make search in index and rank documents
 
-Receive: list of meta, stemmed_query
+Receive: list of meta, stemmed_query<br>
 Return: list of ranked documents
 
 ### updater_72
 Make index update
 
-Receive: textes - list of strs
+Receive: textes - list of strs<br>
 Return: list of ids of updated documents
 
 Make call to:
@@ -73,9 +73,9 @@ Function | Arguments | Description
 
 
 # TODO
-- [] Make doc class
-- [] Snippets api
-- [] Make other functions for index like delete(ids) etc.
-- [] Make doc as a HASH instance in redis database
-- [] Config file for ports and other stuff
-- [] Config for redis db
+- [ ] Make doc class
+- [ ] Snippets api
+- [ ] Make other functions for index like delete(ids) etc.
+- [ ] Make doc as a HASH instance in redis database
+- [ ] Config file for ports and other stuff
+- [ ] Config for redis db
