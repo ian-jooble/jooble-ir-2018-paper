@@ -28,7 +28,7 @@ def update_index(docs, stemmed):
 
     for doc, stm_doc, doc_id in zip(docs, stemmed, new_ids):
         #  update index
-        #  TODO: make doc great again! (as a HASH)
+        #  TODO: make doc great again! (as a HASH object)
         pipe.set("doc:{}".format(doc_id), doc)
         #  update inverted index
         for tok in stm_doc:
