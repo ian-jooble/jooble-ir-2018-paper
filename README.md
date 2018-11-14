@@ -21,10 +21,12 @@ Make call to:
 - Rank service (rank_70) with preprocessed query
 
 ### analyzer_71
-Analyzer provide stemm, tokenize and lang detect workflow
+Analyzer provide **stemm, tokenize and lang detect** workflow
+> Later will be 3 separate services (maybe)
     
 Receive: list of lists of textes
 Return: list of lists of stemmed tokens for each document & list of languages codes
+
 Make call to:
 - Language detection service (lang_detection_67) with query
 - Stemmer service (stemmer_66) with query
@@ -60,7 +62,7 @@ Make call to:
 ## Index
 Index is a Redis database
 
-There a module paper.index where basic functions for working with index are provided:
+There is module paper.index where basic functions for working with index are provided:
 
 Function | Arguments | Description
 ------------ | ------------- | --------
@@ -71,8 +73,9 @@ Function | Arguments | Description
 
 
 # TODO
-- Make doc class
-- Snippets api
-- Make other functions for index like delete(ids) etc.
-- Make doc as a HASH instance in redis database
-- Make config
+- [] Make doc class
+- [] Snippets api
+- [] Make other functions for index like delete(ids) etc.
+- [] Make doc as a HASH instance in redis database
+- [] Config file for ports and other stuff
+- [] Config for redis db
