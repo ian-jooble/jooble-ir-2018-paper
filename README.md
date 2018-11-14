@@ -62,4 +62,17 @@ Index is a Redis database
 
 There a module paper.index where basic functions for working with index are provided:
 
+Function | Arguments | Description
+------------ | ------------- | --------
+`update_index(docs, stemmed)` | **docs** - list or array of strs <br> **stemmed** - list of lists with token strs | Make indexing of textes (inverted and forward)<br>Return: list of ids of updated docs
+`from_eval_texts(path='../../Data/eval_texts.csv')`| **path** - path to eval_textes.csv | Make update from eval textes<br>Return: list of ids of updated docs
+`search(tokens)` | **tokens** - stemmed tokens for search  | Make search (boolean AND - intersect of sets)<br>Return: returns set of doc_ids strs (like "23" or "12345")
+`get_docs(ids, is_str=False)` | **ids** - int ids of docs if **is_str=False**,<br>in other case: **ids** - strs of ids like 'doc:id' | Get docs by their ids<br>Returns: list of strs (documents textes)
 
+
+# TODO
+- Make doc class
+- Snippets api
+- Make other functions for index like delete(ids) etc.
+- Make doc as a HASH instance in redis database
+- Make config
