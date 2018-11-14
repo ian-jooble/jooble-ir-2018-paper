@@ -38,9 +38,10 @@ def update_index(docs, stemmed):
     return list(new_ids)
 
 
-def from_eval_texts(path='../../Data/eval_texts.csv'):
+def from_eval_texts(path='./Data/eval_texts.csv'):
     """
     Method for hydrating index from dump csv data
+    './Data/eval_texts.csv' - using in services
     """
     pipe = redis_conn.pipeline()
 
