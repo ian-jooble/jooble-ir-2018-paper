@@ -1,3 +1,7 @@
 .ipynb_checkpoints/
 .DS_Store
 paper/__pychache__/
+*.npy
+*.model
+*.7z
+*.zip

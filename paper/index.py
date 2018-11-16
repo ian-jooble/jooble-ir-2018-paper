@@ -11,7 +11,7 @@ redis_conn = Redis(decode_responses=True)
 
 def update_index(docs, stemmed):
     """
-    docs - list or array of strs
+    docs - list of jsons of doc object
     stemmed - list of lists with token strs
     returns list of ids of updated docs
     """
@@ -27,8 +27,7 @@ def update_index(docs, stemmed):
     new_ids = range(max_id, len(docs), 1)
 
     for doc, stm_doc, doc_id in zip(docs, stemmed, new_ids):
-        #  update index
-        #  TODO: make doc great again! (as a HASH object)
+        # pipe.hmset("doc:{}".format(doc_id), doc)
         pipe.set("doc:{}".format(doc_id), doc)
         #  update inverted index
         for tok in stm_doc:
