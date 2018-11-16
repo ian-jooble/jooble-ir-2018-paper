@@ -43,8 +43,6 @@ def from_eval_texts(path='./Data/eval_texts.csv'):
     Method for hydrating index from dump csv data
     './Data/eval_texts.csv' - using in services
     """
-    pipe = redis_conn.pipeline()
-
     df = pd.read_csv(path, sep='\t')
     documents = df.text.values[:100]
     documents_stemmed = df.text_searchable.values[:100]
