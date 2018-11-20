@@ -11,7 +11,7 @@ redis_conn = Redis(decode_responses=True)
 
 def update_index(docs, stemmed):
     """
-    docs - list or array of strs
+    docs - list of dicts
     stemmed - list of lists with token strs
     returns list of ids of updated docs
     """
@@ -28,8 +28,8 @@ def update_index(docs, stemmed):
 
     for doc, stm_doc, doc_id in zip(docs, stemmed, new_ids):
         #  update index
-        #  TODO: make doc great again! (as a HASH object)
-        pipe.set("doc:{}".format(doc_id), doc)
+        print(doc)
+        pipe.hmset("doc:{}".format(doc_id), doc)
         #  update inverted index
         for tok in stm_doc:
             pipe.sadd(tok, doc_id)
@@ -68,8 +68,8 @@ def get_docs(ids, is_str=False):
     pipe = redis_conn.pipeline()
     if is_str:
         for doc_id in ids:
-            pipe.get(doc_id)
+            pipe.hgetall(doc_id)
     else:
         for doc_id in ids:
-            pipe.get("doc:{}".format(doc_id))
+            pipe.hgetall("doc:{}".format(doc_id))
     return pipe.execute()

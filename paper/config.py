@@ -4,7 +4,9 @@ Config file class for all services
 import os
 
 
-base_dir = os.path.split(os.path.abspath(os.path.dirname(__file__)))[:-1]
+base_dir = os.path.split(os.path.abspath(os.path.dirname(__file__)))[:-1][0]
+data_dir = os.path.join(base_dir, 'Data')
+by_dir = os.path.join(data_dir, 'by')
 
 SEARCH_PORT = 13568
 RANK_PORT = 13570
