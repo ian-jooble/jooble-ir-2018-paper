@@ -9,48 +9,45 @@
 
 ## Services:
 
-Services filenames ends with last 2 digits of port number to call it (search_68 - port 13568)
-> Ports will be later in config file
-
-### search_68
+### search
 Search server provide **UI hosting** and **all search workflow**
 
 Receive: ajax post request from user interface with meta and search<br>
 Return: ranked docs
 
 Make call to:
-- Analyzer service (analyzer_71) with user search query and receive stemmed tokenized query and lang
-- Rank service (rank_70) with preprocessed query
+- Analyzer service (analyzer) with user search query and receive stemmed tokenized query and lang
+- Rank service (rank) with preprocessed query
 
-### analyzer_71
+### analyzer
 Analyzer provide **stemm, tokenize and lang detect** workflow
     
 Receive: list of lists of textes<br>
 Return: list of lists of stemmed tokens for each document & list of languages codes
 
 Make call to:
-- Language detection service (lang_detection_67) with query
-- Stemmer service (stemmer_66) with query
+- Language detection service (lang_detection) with query
+- Stemmer service (stemmer) with query
 
-### stemmer_66
+### stemmer
 Provide stemming and tokenization
 
 Receive: text document and language<br>
 Return: list of stemmed tokens for document
 
-### lang_detection_67
+### lang_detection
 Make language detection of texts list
 
 Receive: list of strs<br>
 Returns: list of detected languages (strs code like de, en etc.)
 
-### rank_70
+### rank
 Make search in index and rank documents using paper.index module
 
 Receive: list of meta, stemmed_query<br>
 Return: list of ranked documents
 
-### updater_72
+### updater
 Make index update using paper.index module
 
 Receive: textes - list of strs<br>
@@ -83,7 +80,7 @@ Data folder consist eval_textes.csv and hhru.json (parsed vacancies from hh.ru)
 - [ ] Snippets api
 - [ ] Make other functions for index like delete(ids) etc.
 - [ ] Make doc as a HASH instance in redis database
-- [ ] Config file for ports and other stuff
+- [ x] Config file for ports and other stuff
 - [ ] Config for redis db
 - [ ] Make Stemmer for other languages
-- [ ] Make function to create Index from parsed data from hh.ru
+- [ ] Make Index with `./Data/by/*` gzip files
