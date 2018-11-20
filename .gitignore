@@ -5,3 +5,4 @@ paper/__pychache__/
 *.model
 *.7z
 *.zip
+*.pyc
