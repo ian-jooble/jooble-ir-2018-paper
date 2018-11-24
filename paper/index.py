@@ -15,7 +15,6 @@ def update_index(docs, stemmed):
     stemmed - list of lists with token strs
     returns list of ids of updated docs
     """
-
     pipe = redis_conn.pipeline()
 
     max_id = pipe.get("max doc id").execute()[0]
@@ -28,26 +27,16 @@ def update_index(docs, stemmed):
 
     for doc, stm_doc, doc_id in zip(docs, stemmed, new_ids):
         #  update index
-        print(doc)
+        doc['stemmed'] = stm_doc
         pipe.hmset("doc:{}".format(doc_id), doc)
         #  update inverted index
         for tok in stm_doc:
-            pipe.sadd(tok, doc_id)
+            tf = stm_doc.count(tok)
+            pipe.zadd(tok, tf, doc_id)
+            
     pipe.incrby("max doc id", len(docs))
     pipe.execute()
     return list(new_ids)
-
-
-def from_eval_texts(path='./Data/eval_texts.csv'):
-    """
-    Method for hydrating index from dump csv data
-    './Data/eval_texts.csv' - using in services
-    """
-    df = pd.read_csv(path, sep='\t')
-    documents = df.text.values[:100]
-    documents_stemmed = df.text_searchable.values[:100]
-    stemmed = [s_doc.split() for s_doc in documents_stemmed]
-    return update_index(documents, stemmed)
 
 
 def search(tokens):
@@ -73,3 +62,10 @@ def get_docs(ids, is_str=False):
         for doc_id in ids:
             pipe.hgetall("doc:{}".format(doc_id))
     return pipe.execute()
+
+
+def delete_all():
+    """
+    Delete all data from db
+    """
+    redis_conn.flushall()
