@@ -106,6 +106,7 @@ def update_index(docs, stemmed):
     for new_doc, new_id in zip(docs, new_ids):
         pipe.hmset("doc:{}".format(new_id), new_doc)
     pipe.incrby("max doc id", len(docs))
+    print(pipe.execute())
     return list(new_ids)
 
 
@@ -127,7 +128,10 @@ def search(tokens):
     returns set of doc_ids strs
     """
     pipe = redis_conn.pipeline()
-    ids = pipe.sinter(*tokens).execute()[0]
+    # TODO: make get only when tokens is one word
+    print(pipe.zinterstore('lalka', tokens).execute())
+    pipe.zrange('lalka', 0, -1, withscores=True, score_cast_func=float)
+    ids = pipe.execute()
     return ids
 
 
