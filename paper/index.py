@@ -2,7 +2,6 @@
 Module for handling with index database
 """
 from redis import Redis
-import pandas as pd
 from collections import Counter
 from math import log
 
@@ -21,7 +20,7 @@ def update_index(docs, stemmed):
 
     pipe = redis_conn.pipeline()
 
-    max_id = pipe.get("max doc id").execute()[0]
+    max_id = redis_conn.get("max doc id")
     if max_id is None:
         max_id = 0
     else:
@@ -110,28 +109,35 @@ def update_index(docs, stemmed):
     return list(new_ids)
 
 
-def from_eval_texts(path='./Data/eval_texts.csv'):
-    """
-    Method for hydrating index from dump csv data
-    './Data/eval_texts.csv' - using in services
-    """
-    df = pd.read_csv(path, sep='\t')
-    documents = df.text.values[:100]
-    documents_stemmed = df.text_searchable.values[:100]
-    stemmed = [s_doc.split() for s_doc in documents_stemmed]
-    return update_index(documents, stemmed)
-
-
 def search(tokens):
     """
     tokens - list of strs
-    returns set of doc_ids strs
+    returns list with tuples (doc_id, score)
     """
-    pipe = redis_conn.pipeline()
-    # TODO: make get only when tokens is one word
-    print(pipe.zinterstore('lalka', tokens).execute())
-    pipe.zrange('lalka', 0, -1, withscores=True, score_cast_func=float)
-    ids = pipe.execute()
+    if len(tokens) == 1:
+        print('just 1 token')
+        ids = redis_conn.zrange(tokens[0], 0, 1,
+                                withscores=True,
+                                score_cast_func=float)
+    else:
+        # maybe we already have that query in cache
+
+        stemmed_query = ' '.join(tokens)
+        ids = redis_conn.zrange(stemmed_query, 0, 1,
+                                withscores=True,
+                                score_cast_func=float)
+        # if not - make a cache with 90 sec expire time
+        if len(ids) == 0:
+            print('do no use chahe')
+            pipe = redis_conn.pipeline()
+            pipe.zinterstore(stemmed_query, tokens, )
+            pipe.zrange(stemmed_query, 0, -1,
+                        withscores=True,
+                        score_cast_func=float)
+            ids = pipe.execute()[-1]
+            redis_conn.expire(stemmed_query, 90)
+        else:
+            print('using chache')
     return ids
 
 
