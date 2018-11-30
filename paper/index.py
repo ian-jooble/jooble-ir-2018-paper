@@ -12,6 +12,28 @@ N = 10e9
 
 
 def update_index(docs, stemmed):
+    
+    pipe = redis_conn.pipeline()
+
+    max_id = redis_conn.get("max doc id")
+    if max_id is None:
+        max_id = 0
+    else:
+        max_id = int(max_id)
+    new_ids = range(max_id, len(docs), 1)
+        
+    for doc, stm_doc, doc_id in zip(docs, stemmed, new_ids):
+        #  update index
+        pipe.hmset("inv doc:{}".format(doc_id), doc)
+        #  update inverted index
+        for tok in stm_doc:
+            pipe.sadd("inv+ "+tok, doc_id)
+
+    max_id += len(docs)
+    pipe.execute()
+    
+
+def update_index_tfidf(docs, stemmed):
     """
     docs - list of dicts
     stemmed - list of lists with token strs
@@ -109,7 +131,7 @@ def update_index(docs, stemmed):
     return list(new_ids)
 
 
-def search(tokens):
+def search_tfidf(tokens):
     """
     tokens - list of strs
     returns list with tuples (doc_id, score)
@@ -138,6 +160,12 @@ def search(tokens):
             redis_conn.expire(stemmed_query, 90)
         else:
             print('using chache')
+    return ids
+
+
+def search(tokens):
+    tokens = ["inv+ "+tok for tok in tokens]
+    ids = redis_conn.sinter(*tokens)
     return ids
 
 
