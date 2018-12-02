@@ -37,6 +37,8 @@ def normalize_and_stemm(s, lang):
     """
     Normalize and stemm s
     Use it in stemmer service
+    Recive s str and lang str
+    Returns list of stemmed tokens
     """
     s = normalize(s)
     
@@ -44,7 +46,7 @@ def normalize_and_stemm(s, lang):
         s = [stemmer_en.stem(tok) for tok in s.split()]
     else:
         s = [stemmer_ru.stem(tok) for tok in s.split()]
-    return ' '.join(s)
+    return s
 
 
 def norm_stem_lang(s):

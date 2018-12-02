@@ -4,3 +4,4 @@ redis==2.10.6
 langdetect==1.0.7
 nltk==3.3
 pandas==0.22.0
+sklearn==0.0
