@@ -7,8 +7,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 
 redis_conn = Redis(decode_responses=True)
-# constant for tf-idf
-N = 10e9
 
 
 def update_index(docs):
@@ -33,7 +31,7 @@ def update_index(docs):
     pipe.execute()
 
 
-def update_index_tfidf(docs, stemmed):
+def update_tfidf(docs, stemmed):
     """
     docs - list of dicts
     stemmed - list of stemmed textes
@@ -61,43 +59,41 @@ def update_index_tfidf(docs, stemmed):
     for new_doc, new_id in zip(docs, new_ids):
         pipe.hmset("doc:{}".format(new_id), new_doc)
     pipe.incrby("max doc id", len(docs))
-    print(pipe.execute())
+    # print(pipe.execute())
     return list(new_ids)
 
 
-def search_tfidf(tokens):
+def search_tfidf(tokens, limit=-1):
     """
     tokens - list of strs
     returns list with tuples (doc_id, score)
     """
     if len(tokens) == 1:
-        print('just 1 token')
-        ids = redis_conn.zrange(tokens[0], 0, 1,
+        ids = redis_conn.zrange(tokens[0], 0, limit,
                                 withscores=True,
                                 score_cast_func=float)
     else:
         # maybe we already have that query in cache
-
         stemmed_query = ' '.join(tokens)
-        ids = redis_conn.zrange(stemmed_query, 0, 1,
+        ids = redis_conn.zrange(stemmed_query, 0, limit,
                                 withscores=True,
                                 score_cast_func=float)
         # if not - make a cache with 90 sec expire time
         if len(ids) == 0:
-            print('do no use chahe')
             pipe = redis_conn.pipeline()
             pipe.zinterstore(stemmed_query, tokens, )
-            pipe.zrange(stemmed_query, 0, -1,
+            pipe.zrange(stemmed_query, 0, limit,
                         withscores=True,
                         score_cast_func=float)
             ids = pipe.execute()[-1]
-            redis_conn.expire(stemmed_query, 90)
-        else:
-            print('using chache')
-    return ids
+            redis_conn.expire(stemmed_query, 30)
+    return ids[::-1]
 
 
 def search(tokens):
+    """
+    Function is deprecated, do not use
+    """
     tokens = ["inv+ "+tok for tok in tokens]
     ids = redis_conn.sinter(*tokens)
     return ids
